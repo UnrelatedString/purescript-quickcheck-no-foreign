@@ -24,6 +24,7 @@ module Test.QuickCheck.Gen
   , shuffle
   , runGen
   , evalGen
+  , perturbGen
   , uniform
   , sample
   , randomSample
@@ -269,6 +270,8 @@ float32ToInt32 :: Number -> Int
 float32ToInt32 n = shl signBit 31 .|. shl exponent 20 .|. truncatedMantissa
   where signBit :: Int
         signBit = 1 if n < 0 else 0
+        exponent :: Int
+        exponent = 
 
 -- | Perturb a random generator by modifying the current seed
 perturbGen :: forall a. Number -> Gen a -> Gen a

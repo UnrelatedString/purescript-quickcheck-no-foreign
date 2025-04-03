@@ -24,7 +24,6 @@ module Test.QuickCheck.Gen
   , shuffle
   , runGen
   , evalGen
-  , perturbGen
   , uniform
   , sample
   , randomSample
@@ -263,15 +262,3 @@ lcgStep = Gen $ state f where
 -- | A random generator which approximates a uniform random variable on `[0, 1]`
 uniform :: Gen Number
 uniform = (\n -> toNumber n / toNumber lcgM) <$> lcgStep
-
--- Simulate taking the 32 high bits of a double.
-float32ToInt32 :: Number -> Int
-float32ToInt32 n = shl signBit 31 .|. shl exponent 20 .|. truncatedMantissa
-  where signBit :: Int
-        signBit = -- wait shit what about ughhhhhh signed zeroes AND subnormals AND NaNs andkfjasd;ljfsd;klfj;l
-
--- | Perturb a random generator by modifying the current seed
-perturbGen :: forall a. Number -> Gen a -> Gen a
-perturbGen n gen = Gen do
-  void $ modify \s -> s { newSeed = lcgPerturb (float32ToInt32 n) s.newSeed }
-  unGen gen

@@ -46,6 +46,7 @@ import Data.Array.NonEmpty as NEA
 import Data.Enum (class BoundedEnum, fromEnum, toEnum)
 import Data.Semigroup.Foldable (foldMap1)
 import Data.Int (toNumber, floor)
+import Data.Int.Bits ((.|.), shl)
 import Data.List (List(..), toUnfoldable)
 import Data.Maybe (Maybe(..), fromJust)
 import Data.Monoid.Additive (Additive(..))
@@ -263,7 +264,11 @@ lcgStep = Gen $ state f where
 uniform :: Gen Number
 uniform = (\n -> toNumber n / toNumber lcgM) <$> lcgStep
 
-foreign import float32ToInt32 :: Number -> Int
+-- Simulate taking the 32 high bits of a double.
+float32ToInt32 :: Number -> Int
+float32ToInt32 n = shl signBit 31 .|. shl exponent 20 .|. truncatedMantissa
+  where signBit :: Int
+        signBit = -- wait shit what about ughhhhhh signed zeroes AND subnormals AND NaNs andkfjasd;ljfsd;klfj;l
 
 -- | Perturb a random generator by modifying the current seed
 perturbGen :: forall a. Number -> Gen a -> Gen a

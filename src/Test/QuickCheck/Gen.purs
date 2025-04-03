@@ -262,3 +262,16 @@ lcgStep = Gen $ state f where
 -- | A random generator which approximates a uniform random variable on `[0, 1]`
 uniform :: Gen Number
 uniform = (\n -> toNumber n / toNumber lcgM) <$> lcgStep
+
+-- Simulate taking the 32 high bits of a double.
+-- Does not accurately handle a number of cases, including signed zero and NaNs.
+float32ToInt32 :: Number -> Int
+float32ToInt32 n = shl signBit 31 .|. shl exponent 20 .|. truncatedMantissa
+  where signBit :: Int
+        signBit = 1 if n < 0 else 0
+
+-- | Perturb a random generator by modifying the current seed
+perturbGen :: forall a. Number -> Gen a -> Gen a
+perturbGen n gen = Gen do
+  void $ modify \s -> s { newSeed = lcgPerturb (float32ToInt32 n) s.newSeed }
+  unGen gen

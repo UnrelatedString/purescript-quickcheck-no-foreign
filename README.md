@@ -4,7 +4,7 @@
 [![Build status](https://github.com/purescript/purescript-quickcheck/workflows/CI/badge.svg?branch=master)](https://github.com/purescript/purescript-quickcheck/actions?query=workflow%3ACI+branch%3Amaster)
 [![Pursuit](https://pursuit.purescript.org/packages/purescript-quickcheck/badge)](https://pursuit.purescript.org/packages/purescript-quickcheck)
 
-An implementation of QuickCheck in PureScript.
+An implementation of QuickCheck in PureScript, without FFI calls (or `perturbGen`, unfortunately). WAit no I forgot the entirety of Coarbitary relies on it aajf;sdalfjlksfjkl;sj noooooooo 
 
 ## Installation
 
